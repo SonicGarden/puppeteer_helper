@@ -1,7 +1,7 @@
 RSpec.configure do
   # NOTE: puppeteer経由でchromiumのバージョンを管理している
-  json_path = Rails.root.join('node_modules/puppeteer/package.json')
-  chromium_revision = JSON.parse(File.open(json_path).read)['puppeteer']['chromium_revision']
+  module_path = Rails.root.join('node_modules/puppeteer')
+  chromium_revision = `node -e "process.stdout.write(require('#{module_path}/lib/cjs/revisions').PUPPETEER_REVISIONS.chromium)"`
   chromium_path = `node -e "process.stdout.write(require('puppeteer').createBrowserFetcher().revisionInfo('#{chromium_revision}').executablePath)"`
   Selenium::WebDriver::Chrome.path = chromium_path
   # NOTE: Chromiumの場合、環境やバージョンによってwebdrivers gemの自動バージョン判定が正しく機能しないので自前で判定している
