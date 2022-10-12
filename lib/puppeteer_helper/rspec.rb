@@ -1,6 +1,6 @@
 RSpec.configure do
   # NOTE: Using Chromium included in Puppeteer
-  module_path = Rails.root.join('node_modules/puppeteer')
+  module_path = Rails.root.join('node_modules/puppeteer-core')
   chromium_revision = `node -e "process.stdout.write(require('#{module_path}/lib/cjs/puppeteer/revisions').PUPPETEER_REVISIONS.chromium)"`
   chromium_path = `node -e "process.stdout.write(require('puppeteer').createBrowserFetcher().revisionInfo('#{chromium_revision}').executablePath)"`
   Selenium::WebDriver::Chrome.path = chromium_path

@@ -5,7 +5,7 @@ A helper to use chromium in system spec.
 ## Required
 
 - node
-- puppeteer >= 5.2.0
+- puppeteer >= 18.2.0
 
 ## Installation
 
