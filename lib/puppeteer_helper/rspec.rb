@@ -1,8 +1,13 @@
+require 'fileutils'
+
 RSpec.configure do
-  # NOTE: Using Chromium included in Puppeteer
-  module_path = Rails.root.join('node_modules/puppeteer-core')
-  chromium_revision = `node -e "process.stdout.write(require('#{module_path}/lib/cjs/puppeteer/revisions').PUPPETEER_REVISIONS.chromium)"`
-  chromium_path = `node -e "process.stdout.write(require('puppeteer').createBrowserFetcher().revisionInfo('#{chromium_revision}').executablePath)"`
+  gem_dir = File.expand_path('../..', __dir__)
+  # NOTE: プロジェクト内にスクリプトファイルを設置しないと、node_modules以下の参照が上手くいかなかった為に一時的にコピーするようにしている
+  tmp_path = Rails.root.join('tmp/puppeteerHelperExecutablePath.mjs')
+  FileUtils.cp("#{gem_dir}/executablePath.mjs", tmp_path)
+  chromium_path = `node #{tmp_path}`
+  FileUtils.rm_f(tmp_path)
+
   Selenium::WebDriver::Chrome.path = chromium_path
   # NOTE: Detect from the major version
   # SEE: https://chromedriver.chromium.org/downloads/version-selection
