@@ -1,10 +1,20 @@
-import { homedir } from 'os'
-import { join } from 'path'
-import { BrowserFetcher } from 'puppeteer-core'
+import { detectBrowserPlatform, Browser, resolveBuildId, computeExecutablePath } from '@puppeteer/browsers'
+import { getConfiguration } from 'puppeteer/lib/esm/puppeteer/getConfiguration.js'
 import { PUPPETEER_REVISIONS } from 'puppeteer-core/lib/cjs/puppeteer/revisions.js'
 
-// NOTE: 出来ればpuppeteerのAPIを使ってcacheディレクトリのパスを定義したい
-const browserFetcher = new BrowserFetcher({ path: join(homedir(), '.cache', 'puppeteer', 'chrome') })
-const revisionInfo = await browserFetcher.download(PUPPETEER_REVISIONS.chromium)
+const configuration = getConfiguration()
 
-process.stdout.write(revisionInfo.executablePath)
+const platform = detectBrowserPlatform()
+if (!platform) {
+  throw new Error('The current platform is not supported.')
+}
+
+const browser = Browser.CHROME
+const unresolvedBuildId = PUPPETEER_REVISIONS['chrome']
+
+const executablePath = computeExecutablePath({
+  cacheDir: configuration.cacheDirectory,
+  browser: Browser.CHROME,
+  buildId: await resolveBuildId(browser, platform, unresolvedBuildId),
+})
+process.stdout.write(executablePath)
