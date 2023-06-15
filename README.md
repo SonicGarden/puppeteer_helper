@@ -1,4 +1,8 @@
-# PuppeteerHelper
+# Deprecated
+
+> Please use [chrome_testing_downloader](https://github.com/SonicGarden/chrome_testing_downloader) instead.
+
+PuppeteerHelper
 
 A helper to use chromium in system spec.
 
